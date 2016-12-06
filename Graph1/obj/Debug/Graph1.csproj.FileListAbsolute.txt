@@ -1,0 +1,17 @@
+c:\users\alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\Graph1.exe.config
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\Graph1.exe
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\Graph1.pdb
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\WPFToolkit.dll
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\WPFToolkit.pdb
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1.csprojResolveAssemblyReference.cache
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\MainWindow.g.cs
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\App.g.cs
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1_MarkupCompile.cache
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\MainWindow.baml
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1.g.resources
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1.Properties.Resources.resources
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1.csproj.GenerateResource.Cache
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1.exe
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1.pdb
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
+C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.pdb
