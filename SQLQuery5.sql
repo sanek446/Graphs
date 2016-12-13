@@ -1,0 +1,1 @@
+﻿select proccode, ratio from dbo.Codes where Area = 10 and (ProcCode = 'CCC' OR ProcCode = 'CAA' OR ProcCode = '')

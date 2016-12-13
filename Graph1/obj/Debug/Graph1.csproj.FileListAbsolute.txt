@@ -15,3 +15,6 @@ C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug
 C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1.pdb
 C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
 C:\Users\Alexander\documents\visual studio 2015\Projects\Graph1\Graph1\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.pdb
+C:\Users\Alexander\Documents\Visual Studio 2015\Projects\Graph1\Graph1\obj\Debug\Graph1_Content.g.cs
+C:\Users\Alexander\Documents\Visual Studio 2015\Projects\Graph1\Graph1\bin\Debug\ProcCodes.mdf
+C:\Users\Alexander\Documents\Visual Studio 2015\Projects\Graph1\Graph1\bin\Debug\ProcCodes_log.ldf

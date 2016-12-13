@@ -1,0 +1,1 @@
+﻿INSERT INTO dbo.Codes VALUES('NDTUI', 4, 0.4875)
