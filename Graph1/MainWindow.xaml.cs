@@ -304,9 +304,57 @@ namespace Graph1
                 mySeriesLine.DataContext = testList;
 
                 mcChart.Series.Add(mySeriesLine);
-                mySeriesLine.MouseLeftButtonDown += new MouseButtonEventHandler(LineSeries_MouseLeftButtonUp);                                
+                mySeriesLine.MouseLeftButtonDown += new MouseButtonEventHandler(LineSeries_MouseLeftButtonUp);
+                mySeriesLine.MouseRightButtonDown += new MouseButtonEventHandler(LineSeries_MouseRightButtonUp);
+
+                /*  ContextMenu contextMenu1;
+                  contextMenu1 = new ContextMenu();
+
+                  //Create menu items
+                  MenuItem menuItem1;
+                  menuItem1 = new MenuItem();
+                  //add menu item in context menu
+                  contextMenu1.Items.Add(menuItem1);
+                  menuItem1.Header = "Change"; // define name of context menu
+                  menuItem1.Click += new RoutedEventHandler(mi_Click);
+
+                  MenuItem menuItem2;
+                  menuItem2 = new MenuItem();
+                  //add menu item in context menu
+                  contextMenu1.Items.Add(menuItem2);
+                  menuItem2.Header = "Delete"; // define name of context menu
+
+                  mySeriesLine.ContextMenu = contextMenu1;*/
             }
         }
+
+    /*    void mi_Click(object sender, RoutedEventArgs e)
+        {
+            var element = Mouse.DirectlyOver as DependencyObject;
+            while (element != null && !(element is LineDataPoint))
+            {
+                element = VisualTreeHelper.GetParent(element);
+            }
+            if (element != null)
+            {
+                var columnDataPoint = element as LineDataPoint;
+                //X                
+                textBox4.Text = columnDataPoint.FormattedIndependentValue;
+
+                //Y                
+                textBox5.Text = columnDataPoint.FormattedDependentValue;
+                oldRatio = float.Parse(columnDataPoint.FormattedDependentValue);
+
+                comboBox3.SelectedValue = ((LineSeries)sender).Title.ToString();
+
+                double x = double.Parse(columnDataPoint.FormattedIndependentValue);
+                double y = double.Parse(columnDataPoint.FormattedDependentValue);
+                double z = x * y;
+
+                textBlock.Text = " Proc code: " + ((LineSeries)sender).Title.ToString() + "\r\n Area: " + columnDataPoint.FormattedIndependentValue + " \r\n Ratio: " + columnDataPoint.FormattedDependentValue + " \r\n Cost: " + z.ToString();
+            }
+        }*/
+
 
         void LineSeries_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {        
@@ -332,9 +380,40 @@ namespace Graph1
                 double z = x * y;
                 
                 textBlock.Text = " Proc code: " + ((LineSeries)sender).Title.ToString() + "\r\n Area: " + columnDataPoint.FormattedIndependentValue + " \r\n Ratio: " + columnDataPoint.FormattedDependentValue + " \r\n Cost: " + z.ToString();
+                popChange.IsOpen = false;
             }
         }
-        
+
+        void LineSeries_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var element = Mouse.DirectlyOver as DependencyObject;
+            while (element != null && !(element is LineDataPoint))
+            {
+                element = VisualTreeHelper.GetParent(element);
+            }
+            if (element != null)
+            {
+                var columnDataPoint = element as LineDataPoint;
+                //X                
+                textBox4.Text = columnDataPoint.FormattedIndependentValue;
+
+                //Y                
+                textBox5.Text = columnDataPoint.FormattedDependentValue;
+                oldRatio = float.Parse(columnDataPoint.FormattedDependentValue);
+
+                comboBox3.SelectedValue = ((LineSeries)sender).Title.ToString();
+
+                double x = double.Parse(columnDataPoint.FormattedIndependentValue);
+                double y = double.Parse(columnDataPoint.FormattedDependentValue);
+                double z = x * y;
+
+                textBlock.Text = " Proc code: " + ((LineSeries)sender).Title.ToString() + "\r\n Area: " + columnDataPoint.FormattedIndependentValue + " \r\n Ratio: " + columnDataPoint.FormattedDependentValue + " \r\n Cost: " + z.ToString();
+                popChange.IsOpen = false;
+                popChange.IsOpen = true;
+                popupTextBox.Text = y.ToString();
+            }
+        }
+
         private void comboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var xAxis = this.mcChart.ActualAxes.OfType<LinearAxis>().FirstOrDefault(ax => ax.Orientation == AxisOrientation.X);
@@ -409,9 +488,46 @@ namespace Graph1
                 }
             }
         }
-
-        private void button4_Click(object sender, RoutedEventArgs e)
+        
+        private void button7_Click(object sender, RoutedEventArgs e)
         {
+            //ok
+            if (oldRatio == float.Parse(popupTextBox.Text))
+                return;
+
+            try
+            {
+                var lineGraph = mcChart.Series.OfType<LineSeries>().FirstOrDefault(ax => ax.Title.ToString() == comboBox3.Text.Trim());
+                List<KeyValuePair<int, float>> testListNew = (List<KeyValuePair<int, float>>)lineGraph.ItemsSource;
+                //remove old
+                testListNew.Remove(new KeyValuePair<int, float>(int.Parse(textBox4.Text), oldRatio));
+                oldRatio = float.Parse(textBox5.Text);
+                //add new
+                testListNew.Add(new KeyValuePair<int, float>(int.Parse(textBox4.Text), float.Parse(popupTextBox.Text)));
+
+                lineGraph.ItemsSource = testListNew;
+                lineGraph.Refresh();
+            }
+            catch
+            { }
+
+            //also update Point Ratio in DB
+            string SQLquery = "UPDATE dbo.Codes SET Ratio = " + popupTextBox.Text.Replace(",", ".") + " WHERE ProcCode = '" + comboBox3.SelectedValue.ToString().Trim() + "' AND Area =  " + textBox4.Text;
+            if (runSQLquery(SQLquery) == true)
+                Console.WriteLine("Point has been updated");
+
+            popChange.IsOpen = false;
+        }
+
+        private void button6_Click(object sender, RoutedEventArgs e)
+        {
+            //cancel
+            popChange.IsOpen = false;
+        }
+
+        private void button5_Click_1(object sender, RoutedEventArgs e)
+        {
+            //delete
             if (textBox4.Text == "")
             {
                 MessageBox.Show("Fill Area");
@@ -440,42 +556,12 @@ namespace Graph1
             string SQLquery = "DELETE FROM dbo.Codes WHERE ProcCode = '" + comboBox3.SelectedValue.ToString().Trim() + "' AND Area =  " + textBox4.Text + " AND Ratio = " + textBox5.Text.Replace(",", ".");
             if (runSQLquery(SQLquery) == true)
                 Console.WriteLine("Point has been deleted");
+            popChange.IsOpen = false;
         }
 
-        private void button5_Click(object sender, RoutedEventArgs e)
+        private void mcChart_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (textBox4.Text == "")
-            {
-                MessageBox.Show("Fill Area");
-                return;
-            }
-
-            if (textBox5.Text == "")
-            {
-                MessageBox.Show("Fill Ratio");
-                return;
-            }
-
-            try
-            {
-                var lineGraph = mcChart.Series.OfType<LineSeries>().FirstOrDefault(ax => ax.Title.ToString() == comboBox3.Text.Trim());
-                List<KeyValuePair<int, float>> testListNew = (List<KeyValuePair<int, float>>)lineGraph.ItemsSource;
-                //remove old
-                testListNew.Remove(new KeyValuePair<int, float>(int.Parse(textBox4.Text), oldRatio));
-                oldRatio = float.Parse(textBox5.Text);
-                //add new
-                testListNew.Add(new KeyValuePair<int, float>(int.Parse(textBox4.Text), float.Parse(textBox5.Text)));
-                
-                lineGraph.ItemsSource = testListNew;
-                lineGraph.Refresh();
-            }
-            catch
-            { }
-
-            //also update Point Ratio in DB
-            string SQLquery = "UPDATE dbo.Codes SET Ratio = " + textBox5.Text.Replace(",", ".") + " WHERE ProcCode = '" + comboBox3.SelectedValue.ToString().Trim() + "' AND Area =  " + textBox4.Text;
-            if (runSQLquery(SQLquery) == true)
-                Console.WriteLine("Point has been updated");
+            popChange.IsOpen = false;
         }
     }
 }
