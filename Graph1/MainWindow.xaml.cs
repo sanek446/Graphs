@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.DataVisualization;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -32,6 +33,7 @@ namespace Graph1
         string selectProcCodes = "SELECT DISTINCT ProcCode FROM dbo.Codes ORDER BY ProcCode";
         string selectAreas = "SELECT DISTINCT Area FROM dbo.Codes ORDER BY Area";
         DataRow addedRow;
+        float oldRatio = 0;
 
         public MainWindow()
         {
@@ -73,7 +75,7 @@ namespace Graph1
                         addedRow = table.NewRow();
                         addedRow[1] = reader[0];
                         table.Rows.Add(addedRow);
-                        procCodesList.Add(reader[0].ToString());
+                        procCodesList.Add(reader[0].ToString().Trim());
                     }
                     reader.Close();
 
@@ -137,89 +139,7 @@ namespace Graph1
             comboBox3.SelectedIndex = 0;
 
             currentGraphType = -1;
-        }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-
-            //if the same graph then clear else add another one
-            if (currentGraphType != comboBox.SelectedIndex)
-            {
-                mcChart.Series.Clear();
-                mcChart.Axes.Clear();
-
-                if (comboBox.SelectedIndex != 3)
-                {
-
-                    addAxes(textBox.Text, textBox1.Text);
-                }
-                currentGraphType = comboBox.SelectedIndex;
-            }
-
-
-            List<KeyValuePair<int, int>> testList = new List<KeyValuePair<int, int>>();
-            List<KeyValuePair<string, int>> testListPie = new List<KeyValuePair<string, int>>();
-
-            //convert each row into KeyValuePair
-            for (int i = 0; i < dataGrid.Items.Count - 1; i++)
-            {
-                DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(i);
-                TextBlock cellContentX = dataGrid.Columns[1].GetCellContent(row) as TextBlock;
-                TextBlock cellContentY = dataGrid.Columns[2].GetCellContent(row) as TextBlock;
-
-                if (comboBox.SelectedIndex == 3) //for pie chart
-                    testListPie.Add(new KeyValuePair<string, int>(cellContentX.Text, int.Parse(cellContentY.Text)));
-                else
-                    try
-                    {
-                        testList.Add(new KeyValuePair<int, int>(int.Parse(cellContentX.Text), int.Parse(cellContentY.Text)));
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Check table/Type of graph");
-                        return;
-                    }
-            }
-
-            string title = textBox2.Text;
-
-            switch (comboBox.SelectedIndex)
-            {
-                case 0:
-                    LineSeries mySeriesLine = new LineSeries();
-                    mySeriesLine.Title = title;
-                    mySeriesLine.IndependentValueBinding = new Binding("Key");
-                    mySeriesLine.DependentValueBinding = new Binding("Value");
-                    mySeriesLine.ItemsSource = testList;
-                    mcChart.Series.Add(mySeriesLine);
-                    break;
-                case 1:
-                    BarSeries mySeriesBar = new BarSeries();
-                    mySeriesBar.Title = title;
-                    mySeriesBar.IndependentValueBinding = new Binding("Key");
-                    mySeriesBar.DependentValueBinding = new Binding("Value");
-                    mySeriesBar.ItemsSource = testList;
-                    mcChart.Series.Add(mySeriesBar);
-                    break;
-                case 2:
-                    //mySeries = new ColumnSeries();  
-                    ColumnSeries mySeriesLineColumn = new ColumnSeries();
-                    mySeriesLineColumn.Title = title;
-                    mySeriesLineColumn.IndependentValueBinding = new Binding("Key");
-                    mySeriesLineColumn.DependentValueBinding = new Binding("Value");
-                    mySeriesLineColumn.ItemsSource = testList;
-                    mcChart.Series.Add(mySeriesLineColumn);
-                    break;
-                case 3:
-                    //mySeries = new PieSeries();
-                    PieSeries mySeriesPie = new PieSeries();
-                    mySeriesPie.Title = title;
-                    mySeriesPie.IndependentValueBinding = new Binding("Key");
-                    mySeriesPie.DependentValueBinding = new Binding("Value");
-                    mySeriesPie.ItemsSource = testListPie;
-                    mcChart.Series.Add(mySeriesPie);
-                    break;
-            }
+            textBlock.Text = "";
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -261,15 +181,14 @@ namespace Graph1
 
             mcChart.Series.Clear();
             mcChart.Axes.Clear();
-
-            //select proccode, ratio from dbo.Codes where Area = 10 and (ProcCode = 'CCC' OR ProcCode = 'CAA')
+                        
             //select all selected Codes with selected Area
             string selectCodes = "SELECT proccode, ratio FROM dbo.Codes WHERE Area = ";
             string whereString = "AND (";
             List<KeyValuePair<string, float>> testListPie = new List<KeyValuePair<string, float>>();
             float sum = 0;
 
-            for (int i = 0; i < dataGrid.Items.Count - 1; i++)
+            for (int i = 0; i < dataGrid.Items.Count; i++)
             {
                 DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(i);
                 CheckBox cellContentX = dataGrid.Columns[0].GetCellContent(row) as CheckBox;
@@ -316,24 +235,19 @@ namespace Graph1
             mySeriesPie.DependentValueBinding = new Binding("Value");
             mySeriesPie.ItemsSource = testListPie;
             mcChart.Series.Add(mySeriesPie);
-
-            textBox3.Text = sum.ToString();
-
+                        
+            textBlock.Text = "Total cost: " + sum.ToString();
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
 
             mcChart.Series.Clear();
-            mcChart.Axes.Clear();
-            textBox.Text = "";
-            textBox1.Text = "";
-            textBox2.Text = "";
-            textBox3.Text = "";
+            mcChart.Axes.Clear();            
 
             addAxes("Area [in2]", "Ratio [$/in2]");
             //select area, ratio from dbo.Codes where ProcCode = 'CCC'
-            for (int i = 0; i < dataGrid.Items.Count - 1; i++)
+            for (int i = 0; i < dataGrid.Items.Count; i++)
             {
 
                 string selectCodes = "SELECT area, ratio FROM dbo.Codes WHERE ProcCode = ";
@@ -387,11 +301,40 @@ namespace Graph1
                 mySeriesLine.IndependentValueBinding = new Binding("Key");
                 mySeriesLine.DependentValueBinding = new Binding("Value");
                 mySeriesLine.ItemsSource = testList;
+                mySeriesLine.DataContext = testList;
 
                 mcChart.Series.Add(mySeriesLine);
+                mySeriesLine.MouseLeftButtonDown += new MouseButtonEventHandler(LineSeries_MouseLeftButtonUp);                                
             }
         }
 
+        void LineSeries_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {        
+            var element = Mouse.DirectlyOver as DependencyObject;
+            while (element != null && !(element is LineDataPoint))
+            {
+                element = VisualTreeHelper.GetParent(element);
+            }
+            if (element != null)
+            {
+                var columnDataPoint = element as LineDataPoint;
+                //X                
+                textBox4.Text = columnDataPoint.FormattedIndependentValue;
+
+                //Y                
+                textBox5.Text = columnDataPoint.FormattedDependentValue;
+                oldRatio = float.Parse(columnDataPoint.FormattedDependentValue);
+
+                comboBox3.SelectedValue = ((LineSeries)sender).Title.ToString();
+
+                double x = double.Parse(columnDataPoint.FormattedIndependentValue);
+                double y = double.Parse(columnDataPoint.FormattedDependentValue);
+                double z = x * y;
+                
+                textBlock.Text = " Proc code: " + ((LineSeries)sender).Title.ToString() + "\r\n Area: " + columnDataPoint.FormattedIndependentValue + " \r\n Ratio: " + columnDataPoint.FormattedDependentValue + " \r\n Cost: " + z.ToString();
+            }
+        }
+        
         private void comboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var xAxis = this.mcChart.ActualAxes.OfType<LinearAxis>().FirstOrDefault(ax => ax.Orientation == AxisOrientation.X);
@@ -425,33 +368,21 @@ namespace Graph1
                 var lineGraph = mcChart.Series.OfType<LineSeries>().FirstOrDefault(ax => ax.Title.ToString() == comboBox3.Text.Trim());
                 List<KeyValuePair<int, float>> testListNew = (List<KeyValuePair<int, float>>)lineGraph.ItemsSource;
                 testListNew.Add(new KeyValuePair<int, float>(int.Parse(textBox4.Text), float.Parse(textBox5.Text)));
-
+                oldRatio = float.Parse(textBox5.Text);
                 lineGraph.ItemsSource = testListNew;
                 lineGraph.Refresh();
             }
             catch
             { }
-        }
 
-        private void button4_Click(object sender, RoutedEventArgs e)
-        {
-            if (textBox4.Text == "")
-            {
-                MessageBox.Show("Fill Area");
-                return;
-            }
-
-            if (textBox5.Text == "")
-            {
-                MessageBox.Show("Fill Ratio");
-                return;
-            }
-
+            //also add Point into DB
             string SQLquery = "INSERT INTO dbo.Codes VALUES ('" + comboBox3.SelectedValue.ToString().Trim() + "', " + textBox4.Text + ", " + textBox5.Text.Replace(",", ".") + ")";
-            runSQLquery(SQLquery);
+            if (runSQLquery(SQLquery) == true)
+                Console.WriteLine("Point has been added");
+
         }
 
-        private void runSQLquery(string SQLCommand)
+        private bool runSQLquery(string SQLCommand)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(serverConn);
             using (connection = new SqlConnection(builder.ConnectionString))
@@ -469,48 +400,82 @@ namespace Graph1
 
                     reader = cmd.ExecuteReader();
                     reader.Close();
+                    return true;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
+                    return false;
                 }
             }
         }
-        
-        private void mcChart_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+
+        private void button4_Click(object sender, RoutedEventArgs e)
         {
-            /*    var series = this.mcChart.Series.FirstOrDefault();
-                if (series == null) return;
+            if (textBox4.Text == "")
+            {
+                MessageBox.Show("Fill Area");
+                return;
+            }
 
-                var position = e.GetPosition(series);
-                var xAxis = this.mcChart.ActualAxes.OfType<LinearAxis>().FirstOrDefault(ax => ax.Orientation == AxisOrientation.X);
+            if (textBox5.Text == "")
+            {
+                MessageBox.Show("Fill Ratio");
+                return;
+            }
 
-                Console.WriteLine(String.Format("X: {0}, Y: {1}", position.X, position.Y));
-                Console.WriteLine(xAxis.GetPlotAreaCoordinate(position.X).Value);*/
+            try
+            {
+                var lineGraph = mcChart.Series.OfType<LineSeries>().FirstOrDefault(ax => ax.Title.ToString() == comboBox3.Text.Trim());
+                List<KeyValuePair<int, float>> testListNew = (List<KeyValuePair<int, float>>)lineGraph.ItemsSource;
+                testListNew.Remove(new KeyValuePair<int, float>(int.Parse(textBox4.Text), float.Parse(textBox5.Text)));
+                oldRatio = 0;
+                lineGraph.ItemsSource = testListNew;
+                lineGraph.Refresh();
+            }
+            catch
+            { }
 
-            /*  IInputElement lInputElement = sender as IInputElement; // == Chart, LineSeries ...
-              Chart lChart = sender as Chart;
-              LineSeries lLineSeries = (LineSeries) mcChart.Series.FirstOrDefault(); //sender as LineSeries;
+            //also delete Point from DB
+            string SQLquery = "DELETE FROM dbo.Codes WHERE ProcCode = '" + comboBox3.SelectedValue.ToString().Trim() + "' AND Area =  " + textBox4.Text + " AND Ratio = " + textBox5.Text.Replace(",", ".");
+            if (runSQLquery(SQLquery) == true)
+                Console.WriteLine("Point has been deleted");
+        }
 
-              Point lPoint = e.GetPosition(lInputElement);
-              if (lChart != null)
-              {
-                  IInputElement lSelection = lChart.InputHitTest(lPoint);
+        private void button5_Click(object sender, RoutedEventArgs e)
+        {
+            if (textBox4.Text == "")
+            {
+                MessageBox.Show("Fill Area");
+                return;
+            }
 
-                  //IInputElement lSelection = lChart.InputHitTest(lPoint);
-                  if (lSelection == null) return;                
-                  Console.WriteLine(lSelection.GetType().ToString());
-                 // lSelection.DataContext.Key; //x
-                  //lSelection.DataContext.Value; //y
+            if (textBox5.Text == "")
+            {
+                MessageBox.Show("Fill Ratio");
+                return;
+            }
 
-              }
-              else if (lLineSeries != null)
-              {
-                  IInputElement lSelection = lLineSeries.InputHitTest(lPoint);
-                  if (lSelection == null) return;
-                  Console.WriteLine(lSelection.GetType().ToString());
-              }*/
+            try
+            {
+                var lineGraph = mcChart.Series.OfType<LineSeries>().FirstOrDefault(ax => ax.Title.ToString() == comboBox3.Text.Trim());
+                List<KeyValuePair<int, float>> testListNew = (List<KeyValuePair<int, float>>)lineGraph.ItemsSource;
+                //remove old
+                testListNew.Remove(new KeyValuePair<int, float>(int.Parse(textBox4.Text), oldRatio));
+                oldRatio = float.Parse(textBox5.Text);
+                //add new
+                testListNew.Add(new KeyValuePair<int, float>(int.Parse(textBox4.Text), float.Parse(textBox5.Text)));
+                
+                lineGraph.ItemsSource = testListNew;
+                lineGraph.Refresh();
+            }
+            catch
+            { }
 
+            //also update Point Ratio in DB
+            string SQLquery = "UPDATE dbo.Codes SET Ratio = " + textBox5.Text.Replace(",", ".") + " WHERE ProcCode = '" + comboBox3.SelectedValue.ToString().Trim() + "' AND Area =  " + textBox4.Text;
+            if (runSQLquery(SQLquery) == true)
+                Console.WriteLine("Point has been updated");
         }
     }
 }

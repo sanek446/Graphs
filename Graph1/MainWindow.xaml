@@ -6,36 +6,22 @@
    Title="MainWindow" Height="482.5" Width="777">
 
     <Grid Margin="0,0,0,14" IsManipulationEnabled="True" ScrollViewer.HorizontalScrollBarVisibility="Visible">
-        <charting:Chart Name="mcChart"
-Background="LightSteelBlue" Margin="320,3,16,63" IsManipulationEnabled="True" MouseLeftButtonDown="mcChart_MouseLeftButtonDown"/>
-        <charting:LineSeries HorizontalAlignment="Left" Margin="390,321,0,0" VerticalAlignment="Top" IsSelectionEnabled="True" IsManipulationEnabled="True">
-            <charting:LineSeries.DataPointStyle>
-                <Style TargetType="charting:LineDataPoint">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Setter Property="Background" Value="Purple"/>
-                </Style>
-            </charting:LineSeries.DataPointStyle>
-        </charting:LineSeries>
+        <charting:Chart Name="mcChart" Background="LightSteelBlue" Margin="320,3,7,12">
+            <charting:Chart.Series>
+                <charting:LineSeries HorizontalAlignment="Left" Margin="390,321,0,0" VerticalAlignment="Top" IsSelectionEnabled="True" IsManipulationEnabled="True">
 
-        <charting:PieSeries IsSelectionEnabled="True" Margin="304,2,10,-14">
+                </charting:LineSeries>
+            </charting:Chart.Series>
+        </charting:Chart>
 
-        </charting:PieSeries>
-        
+
         <Button x:Name="button1" Content="Clear" HorizontalAlignment="Left" Margin="190,128,0,0" VerticalAlignment="Top" Width="75" Click="button1_Click"/>
         <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="12,51,0,0" VerticalAlignment="Top" Height="167" Width="129" EnableRowVirtualization="False"/>
         <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="148,196,0,0" VerticalAlignment="Top" Width="67"/>
         <Button x:Name="button2" Content="Line graphs" HorizontalAlignment="Left" Margin="190,95,0,0" VerticalAlignment="Top" Width="75" Click="button2_Click"/>
         <Button x:Name="button3" Content="Pie chart" HorizontalAlignment="Left" Margin="223,198,0,0" VerticalAlignment="Top" Width="75" Click="button3_Click"/>
-        <Label x:Name="label1" Content="X value:" HorizontalAlignment="Left" Margin="431,405,0,0" Height="26" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="481,407,0,0" TextWrapping="Wrap" Width="46" Height="22" VerticalAlignment="Top"/>
-        <Label x:Name="label2" Content="Y value:" HorizontalAlignment="Left" Margin="537,405,0,0" Height="26" VerticalAlignment="Top" RenderTransformOrigin="1.54,0.577"/>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="588,406,0,0" TextWrapping="Wrap" Width="47" Height="24" VerticalAlignment="Top"/>
-        <Label x:Name="label3" Content="X * Y:" HorizontalAlignment="Left" Margin="657,405,0,0" Height="26" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox2" HorizontalAlignment="Left" Margin="697,407,0,0" TextWrapping="Wrap" Width="53" Height="22" VerticalAlignment="Top"/>
         <Label x:Name="label4" Content="Proc codes:" HorizontalAlignment="Left" Margin="22,20,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label5" Content="Area" HorizontalAlignment="Left" Margin="165,164,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label6" Content="Total cost:" HorizontalAlignment="Left" Margin="284,405,0,0" Height="26" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox3" HorizontalAlignment="Left" Margin="350,407,0,0" TextWrapping="Wrap" Width="73" Height="22" VerticalAlignment="Top"/>
         <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="161,55,0,0" VerticalAlignment="Top" Width="59" SelectionChanged="comboBox_SelectionChanged"/>
         <Label x:Name="label7" Content="to:" HorizontalAlignment="Left" Margin="223,54,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="comboBox2" HorizontalAlignment="Left" Margin="250,56,0,0" VerticalAlignment="Top" Width="62" SelectionChanged="comboBox2_SelectionChanged"/>
@@ -44,9 +30,11 @@ Background="LightSteelBlue" Margin="320,3,16,63" IsManipulationEnabled="True" Mo
         <TextBox x:Name="textBox5" HorizontalAlignment="Left" Height="24" Margin="137,307,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="58" Text="0,1"/>
         <Label x:Name="label8" Content="Area" HorizontalAlignment="Left" Margin="89,274,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label9" Content="Ratio" HorizontalAlignment="Left" Margin="146,274,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.289,-1.154"/>
-        <Button x:Name="button" Content="Add point on graph" HorizontalAlignment="Left" Margin="198,295,0,0" VerticalAlignment="Top" Width="115" Click="button_Click_1"/>
+        <Button x:Name="button" Content="Add point" HorizontalAlignment="Left" Margin="203,282,0,0" VerticalAlignment="Top" Width="105" Click="button_Click_1"/>
         <ComboBox x:Name="comboBox3" HorizontalAlignment="Left" Margin="8,308,0,0" VerticalAlignment="Top" Width="66"/>
         <Label x:Name="label4_Copy" Content="Proc codes:" HorizontalAlignment="Left" Margin="6,274,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button4" Content="Add point to DB" HorizontalAlignment="Left" Margin="200,331,0,0" VerticalAlignment="Top" Width="111" Click="button4_Click"/>
+        <Button x:Name="button4" Content="Delete point" HorizontalAlignment="Left" Margin="203,311,0,0" VerticalAlignment="Top" Width="104" Click="button4_Click"/>
+        <Button x:Name="button5" Content="Change point (Y)" HorizontalAlignment="Left" Margin="203,337,0,0" VerticalAlignment="Top" Width="104" Click="button5_Click"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="9,368,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Text"/>
     </Grid>
 </Window>
